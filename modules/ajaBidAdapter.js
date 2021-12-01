@@ -82,7 +82,6 @@ export const spec = {
     const bid = {
       requestId: ad.prebid_id,
       cpm: ad.price,
-      creativeId: ad.creative_id,
       dealId: ad.deal_id,
       currency: ad.currency || 'USD',
       netRevenue: true,
@@ -95,6 +94,7 @@ export const spec = {
     if (AD_TYPE.VIDEO === ad.ad_type) {
       const videoAd = bidderResponseBody.ad.video;
       Object.assign(bid, {
+        creativeId: videoAd.crid,
         vastXml: videoAd.vtag,
         width: videoAd.w,
         height: videoAd.h,
@@ -107,6 +107,7 @@ export const spec = {
     } else if (AD_TYPE.BANNER === ad.ad_type) {
       const bannerAd = bidderResponseBody.ad.banner;
       Object.assign(bid, {
+        creativeId: bannerAd.crid,
         width: bannerAd.w,
         height: bannerAd.h,
         ad: bannerAd.tag,
@@ -132,6 +133,7 @@ export const spec = {
       const assets = nativeAd.assets;
 
       Object.assign(bid, {
+        creativeId: nativeAd.crid,
         mediaType: NATIVE
       });
 
