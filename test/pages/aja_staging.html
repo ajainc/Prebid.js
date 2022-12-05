@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Prebid.js ajaBidAdapter AJA SSP Staging Test Page</title>
+    <script src="http://localhost:9999/build/dev/prebid.js"></script>
+
+    <script>
+        const pbjs = window.pbjs || {}
+        pbjs.que = pbjs.que || []
+
+        // AJA Banner Ad Unit
+        const adUnits = [{
+            code: '123456',
+            mediaTypes: {
+                banner: {
+                    sizes: [
+                        [300, 250],
+                        [320, 50],
+                        [1, 1],
+                    ],
+                }
+            },
+            bids: [{
+                bidder: 'aja',
+                params: {
+                    asi: 'bi6h4Hdjj'
+                }
+            }]
+        }]
+
+        pbjs.que.push(() => {
+            pbjs.addAdUnits(adUnits)
+            pbjs.requestBids({
+                bidsBackHandler: (v) => {
+                    console.log(v)
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+
+</body>
+</html>

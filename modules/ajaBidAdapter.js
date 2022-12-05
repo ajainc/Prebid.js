@@ -5,7 +5,7 @@ import { VIDEO, BANNER, NATIVE } from '../src/mediaTypes.js';
 import {tryAppendQueryString} from '../libraries/urlUtils/urlUtils.js';
 
 const BidderCode = 'aja';
-const URL = 'https://ad.as.amanad.adtdp.com/v2/prebid';
+const URL = 'https://stg-ad.as.amanad.adtdp.com/v2/prebid';
 const SDKType = 5;
 const AdType = {
   Banner: 1,
