@@ -3,15 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Prebid.js ajaBidAdapter AJA SSP Staging Test Page</title>
+    <style>
+        html, body {
+            margin: 0
+        }
+    </style>
     <script src="http://localhost:9999/build/dev/prebid.js"></script>
 
     <script>
         const pbjs = window.pbjs || {}
         pbjs.que = pbjs.que || []
 
+        const adUnitCode = '123456'
+
         // AJA Banner Ad Unit
         const adUnits = [{
-            code: '123456',
+            code: adUnitCode,
             mediaTypes: {
                 banner: {
                     sizes: [
@@ -32,8 +39,24 @@
         pbjs.que.push(() => {
             pbjs.addAdUnits(adUnits)
             pbjs.requestBids({
-                bidsBackHandler: (v) => {
-                    console.log(v)
+                bidsBackHandler: ({[adUnitCode]: adUnitBids}) => {
+                    const [bid] = adUnitBids.bids
+                    if (!bid) return
+
+                    const ins = document.createElement('ins')
+                    ins.style.display = 'block'
+                    ins.style.width = `${bid.width}px`
+                    ins.style.height = `${bid.height}px`
+                    const iframe = document.createElement('iframe')
+                    iframe.style.display = 'block'
+                    iframe.style.width = `${bid.width}px`
+                    iframe.style.height = `${bid.height}px`
+                    iframe.style.border = 'none'
+                    iframe.scrolling = 'no'
+                    iframe.frameBorder = '0'
+                    iframe.srcdoc = `<!doctypehtml><html lang=ja><meta charset=UTF-8><title>Page Title</title><style>body,html{margin:0;padding:0}</style>${bid.ad}`
+                    ins.appendChild(iframe)
+                    document.body.appendChild(ins)
                 }
             })
         })
