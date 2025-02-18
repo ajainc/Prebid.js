@@ -6,6 +6,7 @@ import {tryAppendQueryString} from '../libraries/urlUtils/urlUtils.js';
 /**
  * @typedef {import('../src/adapters/bidderFactory.js').BidRequest} BidRequest
  * @typedef {import('../src/adapters/bidderFactory.js').ServerRequest} ServerRequest
+ * @typedef {import('../src/adapters/bidderFactory.js').Bid} Bid
  */
 
 const BidderCode = 'aja';
@@ -32,8 +33,6 @@ export const spec = {
   supportedMediaTypes: [BANNER],
 
   /**
-   * Determines whether or not the given bid has all the params needed to make a valid request.
-   *
    * @param {BidRequest} bidRequest
    * @returns {boolean}
    */
@@ -42,12 +41,9 @@ export const spec = {
   },
 
   /**
-   * Build the request to the Server which requests Bids for the given array of Requests.
-   * Each BidRequest in the argument array is guaranteed to have passed the isBidRequestValid() test.
-   *
    * @param {BidRequest[]} validBidRequests
-   * @param {*} bidderRequest
-   * @returns {ServerRequest|ServerRequest[]}
+   * @param {Object} bidderRequest
+   * @returns {ServerRequest[]}
    */
   buildRequests: function(validBidRequests, bidderRequest) {
     const bidRequests = [];
@@ -96,6 +92,10 @@ export const spec = {
     return bidRequests;
   },
 
+  /**
+   * @param {Object} bidderResponse
+   * @returns {Bid[]}
+   */
   interpretResponse: function(bidderResponse) {
     const bidderResponseBody = bidderResponse.body;
 
@@ -137,6 +137,11 @@ export const spec = {
     return [bid];
   },
 
+  /**
+   * @param {Object} syncOptions
+   * @param {Object[]} serverResponses
+   * @returns {Object[]}
+   */
   getUserSyncs: function(syncOptions, serverResponses) {
     const syncs = [];
     if (!serverResponses.length) {
@@ -167,9 +172,8 @@ export const spec = {
   },
 
   /**
-   * Serialize supply chain object
    * @param {Object} supplyChain
-   * @returns {String | undefined}
+   * @returns {String|undefined}
    */
   serializeSupplyChain: function(supplyChain) {
     if (!supplyChain || !supplyChain.nodes) return undefined
@@ -178,7 +182,6 @@ export const spec = {
   },
 
   /**
-   * Serialize each supply chain nodes
    * @param {Array} nodes
    * @returns {String}
    */
@@ -192,6 +195,10 @@ export const spec = {
   }
 }
 
+/**
+ * @param {BidRequest} bidRequest
+ * @returns {number[]}
+ */
 function pickAdFormats(bidRequest) {
   let sizes = bidRequest.sizes || []
   sizes.push(...(bidRequest.mediaTypes?.banner?.sizes || []))
